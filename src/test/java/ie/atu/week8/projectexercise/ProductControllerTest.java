@@ -50,16 +50,17 @@ class ProductControllerTest {
 
     @Test
     void testCreateProduct() throws Exception {
-        Product product = new Product(null, "Pot", "10 litres", 30);
+        Product product = new Product(2L, "Product A", "Olive oil", 50);
         when(productService.saveProduct(any(Product.class))).thenReturn(product);
 
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonDetails = mapper.writeValueAsString(product);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonValue = objectMapper.writeValueAsString(product);
 
-        mockMvc.perform(post("/products").contentType("application/json").content(jsonDetails))
+        mockMvc.perform(post("/products").contentType("application/json").content(jsonValue))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Pot"));
+                .andExpect(jsonPath("$.name").value("Product A"));
     }
+
 
     @Test
     void updateProduct() {
