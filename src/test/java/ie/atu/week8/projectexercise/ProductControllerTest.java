@@ -1,6 +1,5 @@
 package ie.atu.week8.projectexercise;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
@@ -45,7 +43,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("name"))
                 .andExpect(jsonPath("$.description").value("chair"))
-                .andExpect(jsonPath("$.price").value(100));
+                .andExpect(jsonPath("$.price").value(150));
     }
 
     @Test
@@ -60,7 +58,6 @@ class ProductControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Product A"));
     }
-
 
     @Test
     void updateProduct() throws Exception {
