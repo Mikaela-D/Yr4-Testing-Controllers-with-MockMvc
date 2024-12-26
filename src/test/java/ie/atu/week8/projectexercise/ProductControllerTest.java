@@ -63,7 +63,20 @@ class ProductControllerTest {
 
 
     @Test
-    void updateProduct() {
+    void updateProduct() throws Exception {
+        Product existingProduct = new Product(1L, "Product A", "Water", 200);
+        Product updatedProduct = new Product(1L, "Product B", "B: CocaCola", 200);
+
+        when(productService.getProductById(1L)).thenReturn(Optional.of(existingProduct));
+        when(productService.saveProduct(any(Product.class))).thenReturn(updatedProduct);
+
+        objectMapper = new ObjectMapper();
+        String updatedProductJson = objectMapper.writeValueAsString(updatedProduct);
+
+        mockMvc.perform(put("/products/1").contentType("application/json").content(updatedProductJson))
+                .andExpect(jsonPath("$.name").value("Product B"))
+                .andExpect(jsonPath("$.description").value("B: CocaCola"))
+                .andExpect(jsonPath("$.price").value(200));
     }
 
     @Test
