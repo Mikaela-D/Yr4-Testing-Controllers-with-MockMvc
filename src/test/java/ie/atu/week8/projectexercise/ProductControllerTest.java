@@ -80,6 +80,12 @@ class ProductControllerTest {
     }
 
     @Test
-    void deleteProduct() {
+    void deleteProduct() throws Exception {
+        when(productService.getProductById(1L)).thenReturn(Optional.of(new Product()));
+
+        mockMvc.perform(delete("/products/1"))
+                .andExpect(status().isNoContent());
+
+        verify(productService, times(1)).deleteProduct(1L);
     }
 }
