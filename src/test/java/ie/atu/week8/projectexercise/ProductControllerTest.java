@@ -8,15 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
@@ -25,9 +26,11 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
+        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -36,12 +39,13 @@ class ProductControllerTest {
 
     @Test
     void testGetProductById() throws Exception {
-        Product product = new Product(1L, "Pot", "10 litres", 30);
+        Product product = new Product(1L, "name", "chair", 150);
         when(productService.getProductById(1L)).thenReturn(Optional.of(product));
         mockMvc.perform(get("/products/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Pot"));
-
+                .andExpect(jsonPath("$.name").value("name"))
+                .andExpect(jsonPath("$.description").value("chair"))
+                .andExpect(jsonPath("$.price").value(100));
     }
 
     @Test
